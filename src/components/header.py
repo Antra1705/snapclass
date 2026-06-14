@@ -12,3 +12,16 @@ def header_home():
 
 
     """, unsafe_allow_html=True)
+
+def header_dashboard():
+    logo_url="https://i.bb.co/YTYGn5qV/logo.png"
+    st.markdown("""
+                <div style="display: flex; align-items: left; justify-content: center; gap: 10px;">
+                    <img src='{logo_url}' style='height:100px'; />
+                    <h2 style='text-align: center; color: #E0E3FF;'>SNAP<br/>CLASS</h2>
+                </div>
+        
+
+
+
+    """, unsafe_allow_html=True)
