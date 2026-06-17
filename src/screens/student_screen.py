@@ -109,10 +109,6 @@ def student_screen():
         with st.spinner('AI is scannng...'):
             detected, all_ids, num_faces = predict_attendance(img)
 
-            st.write("num_faces =", num_faces)
-            st.write("detected =", detected)
-            st.write("all_ids =", all_ids)
-
             if num_faces == 0:
                 st.warning('Face not found')
             elif num_faces > 1:
@@ -126,9 +122,6 @@ def student_screen():
                         (s for s in all_students if int(s['student_id']) == student_id),
                         None
                     )
-
-                    st.write("student_id =", student_id)
-                    st.write("student =", student)
 
                     if student:
                         st.session_state.is_logged_in = True
