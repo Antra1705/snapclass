@@ -122,6 +122,8 @@ def student_screen():
                     student_id = int(list(detected.keys())[0])
 
                     all_students = get_all_students()
+                    st.write("Number of students:", len(all_students))
+                    st.json(all_students)
 
                     student = next(
                         (s for s in all_students if int(s['student_id']) == student_id),
