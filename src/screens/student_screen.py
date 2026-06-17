@@ -119,7 +119,7 @@ def student_screen():
                 st.warning('Multiple faces detected, please ensure only your face is visible')
             else :
                 if detected:
-                    student_id = int(list(detected.keys())[0])
+                    student_id = list(detected.keys())[0]
 
                     all_students = get_all_students()
                     st.write("Number of students:", len(all_students))
