@@ -119,9 +119,17 @@ def student_screen():
                 st.warning('Multiple faces detected, please ensure only your face is visible')
             else :
                 if detected:
-                    student_id = list(detected.keys())[0]
+                    student_id = int(list(detected.keys())[0])
+
                     all_students = get_all_students()
-                    student = next((s for s in all_students if s['student_id'] == student_id), None)
+
+                    student = next(
+                        (s for s in all_students if int(s['student_id']) == student_id),
+                        None
+                    )
+
+                    st.write("student_id =", student_id)
+                    st.write("student =", student)
 
                     if student:
                         st.session_state.is_logged_in = True
