@@ -62,6 +62,10 @@ def student_dashboard():
         sid = sub['subject_id']
 
         stats = stats_map.get(sid, {"total":0, "attended": 0})
+
+        st.write("sub =", sub)
+        st.write("sid =", sid)
+        st.write("stats =", stats)
         def unenroll_button():
             if st.button(
                 'Unenroll from this course',
