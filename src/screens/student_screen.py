@@ -39,9 +39,6 @@ def student_dashboard():
         subjects = get_student_subjects(student_id)
         logs = get_student_attendance(student_id)
 
-    st.write("student_id =", student_id)
-    st.write("subjects =", subjects)
-
     stats_map = {}
 
     for log in logs:
@@ -57,15 +54,11 @@ def student_dashboard():
 
     cols = st.columns(2)
     for i, sub_node in enumerate(subjects):
-        st.write("Rendering:", sub_node)
         sub = sub_node['subjects']
         sid = sub['subject_id']
 
         stats = stats_map.get(sid, {"total":0, "attended": 0})
 
-        st.write("sub =", sub)
-        st.write("sid =", sid)
-        st.write("stats =", stats)
         def unenroll_button():
             if st.button(
                 'Unenroll from this course',
@@ -78,7 +71,6 @@ def student_dashboard():
                 st.toast(f"Unenrolled from {sub['name']} successfully!")
                 st.rerun()
         with cols[i % 2]:
-            st.success(f"About to render {sub['name']}")
             subject_card(
                 name = sub['name'],
                 code = sub['subject_code'],
@@ -87,6 +79,7 @@ def student_dashboard():
                 ('📅', 'Total', stats['total']),
                 ('✅', 'Attended', stats['attended'])
             ],
+            footer_callback=unenroll_button
         )
 
     footer_dashboard()
