@@ -39,6 +39,9 @@ def student_dashboard():
         subjects = get_student_subjects(student_id)
         logs = get_student_attendance(student_id)
 
+    st.write("student_id =", student_id)
+    st.write("subjects =", subjects)
+
     stats_map = {}
 
     for log in logs:
