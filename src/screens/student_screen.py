@@ -57,6 +57,7 @@ def student_dashboard():
 
     cols = st.columns(2)
     for i, sub_node in enumerate(subjects):
+        st.write("Rendering:", sub_node)
         sub = sub_node['subjects']
         sid = sub['subject_id']
 
@@ -73,6 +74,7 @@ def student_dashboard():
                     st.toast(f"Unenrolled from {sub['name']} successfully!")
                     st.rerun()
             with cols[i % 2]:
+                st.success(f"About to render {sub['name']}")
                 subject_card(
                 name = sub['name'],
                 code = sub['subject_code'],
