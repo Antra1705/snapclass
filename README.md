@@ -54,6 +54,8 @@ use voice attendance.
 ```
 snapclass/
 ├── main.py                  # uvicorn entrypoint for the API
+├── Dockerfile               # Hugging Face Spaces (Docker SDK) — port 7860
+├── requirements-api.txt     # production API deps (no Streamlit)
 ├── api/                     # FastAPI backend
 │   ├── main.py              # app, CORS, startup (model warm-up, JWT check)
 │   ├── auth.py              # JWT creation/validation, role dependencies
@@ -115,7 +117,77 @@ npm run dev          # http://localhost:3000
 
 The backend URL lives in one place: `NEXT_PUBLIC_API_BASE_URL` in
 `classsnap-frontend/.env.local` (defaults to `http://localhost:8000`). Deploying the
-backend elsewhere (e.g. Render) is a one-line change there.
+backend elsewhere is a one-line change there.
+
+---
+
+## Deploy (production)
+
+Recommended split:
+
+| Piece | Host | Why |
+|---|---|---|
+| Frontend (`classsnap-frontend/`) | **Vercel** | Free HTTPS for Next.js |
+| Backend (`api/` + models) | **Hugging Face Spaces (Docker)** | Free tier has ~16 GB RAM — enough for dlib + PyTorch. Render's free 512 MB tier OOMs at startup. |
+
+### A. Backend → Hugging Face Spaces
+
+Files already in the repo for this:
+
+- `Dockerfile` — Python 3.12, CPU-only PyTorch, listens on **port 7860** (required by Spaces)
+- `requirements-api.txt` — API deps only (no Streamlit)
+- `.dockerignore` — keeps the image lean (excludes frontend, venv, assets)
+
+**1. Create the Space**
+
+1. Go to [huggingface.co/new-space](https://huggingface.co/new-space)
+2. Name: e.g. `snapclass-api`
+3. **SDK: Docker** (not Gradio / Streamlit)
+4. Hardware: **CPU basic** (free) is enough
+5. Visibility: Public is fine (secrets stay private)
+
+**2. Connect this GitHub repo**
+
+In the Space → **Settings → Repository** → sync / push from `Antra1705/snapclass`
+(or clone the Space and push the repo contents so the root `Dockerfile` is used).
+
+**3. Add Space secrets** (Settings → **Variables and secrets** → New secret)
+
+| Name | Value |
+|---|---|
+| `SUPABASE_URL` | `https://vevjolubglxagpnfbxdr.supabase.co` |
+| `SUPABASE_KEY` | your `sb_secret_…` key |
+| `JWT_SECRET` | same value as in `.streamlit/secrets.toml` |
+| `FRONTEND_ORIGINS` | your Vercel URL, e.g. `https://snapclass.vercel.app` (comma-separate if you have more) |
+
+Do **not** put these in the Dockerfile or commit them.
+
+**4. Wait for the build**
+
+First build can take **10–20 minutes** (PyTorch + dlib + models). When it's live, open:
+
+```
+https://<your-username>-snapclass-api.hf.space/api/health
+```
+
+You should see `{"status":"ok"}`. Cold starts after idle can take ~30–60s while models warm up.
+
+### B. Frontend → Vercel
+
+1. [vercel.com](https://vercel.com) → Import `Antra1705/snapclass`
+2. **Root Directory** = `classsnap-frontend`
+3. Env var: `NEXT_PUBLIC_API_BASE_URL` = `https://<your-username>-snapclass-api.hf.space` (no trailing slash)
+4. Deploy, then go back to the Space and set `FRONTEND_ORIGINS` to the Vercel URL, then restart/rebuild the Space once so CORS allows the frontend.
+
+### C. Local check after deploy
+
+From your machine:
+
+```bash
+curl https://<your-username>-snapclass-api.hf.space/api/health
+```
+
+Then open the Vercel URL and run through teacher login / student FaceID once.
 
 ---
 

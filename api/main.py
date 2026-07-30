@@ -3,6 +3,7 @@
 Run with: uvicorn api.main:app --reload  (or python main.py)
 """
 
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -33,9 +34,18 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# Comma-separated list of allowed frontend origins. Defaults to the local
+# Next.js dev server; in production set e.g.
+#   FRONTEND_ORIGINS=https://snapclass.vercel.app
+_origins = [
+    o.strip()
+    for o in os.environ.get("FRONTEND_ORIGINS", "http://localhost:3000").split(",")
+    if o.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -1,0 +1,23 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+.git/
+.streamlit/
+.env
+.env.*
+.vscode/
+
+# Frontend — not needed in the API image
+classsnap-frontend/
+
+# Legacy Streamlit UI + verification assets (not used at runtime)
+app.py
+verification/
+scripts/
+*.md
+!README.md
+
+node_modules/
+.next/
