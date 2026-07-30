@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+/* SnapClass palette + fonts (mirrors the original Streamlit theme). */
+@theme inline {
+  --color-blurple: #5865f2;
+  --color-lavender: #e0e3ff;
+  --color-snappink: #eb459e;
+  --color-ink: #1e293b;
+  --font-display: var(--font-climate-crisis), sans-serif;
+  --font-body: var(--font-outfit), sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-lavender font-body text-ink antialiased;
+}

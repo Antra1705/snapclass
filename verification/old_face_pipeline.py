@@ -2,26 +2,19 @@ import dlib
 import numpy as np
 import face_recognition_models
 from sklearn.svm import SVC
+import streamlit as st
 
 from src.database.db import get_all_students
 
-# Module-level caches replace st.cache_resource. Models are warmed at FastAPI
-# startup (see api/main.py) and reused for the lifetime of the process.
-_dlib_models = None
-_trained_model_cache = {"loaded": False, "data": None}
-
-
+@st.cache_resource
 def load_dlib_models():
-    global _dlib_models
-    if _dlib_models is None:
-        detector = dlib.get_frontal_face_detector()
+    detector = dlib.get_frontal_face_detector()
 
-        sp = dlib.shape_predictor(face_recognition_models.pose_predictor_model_location())
+    sp = dlib.shape_predictor(face_recognition_models.pose_predictor_model_location())
 
-        facerec = dlib.face_recognition_model_v1(face_recognition_models.face_recognition_model_location())
+    facerec = dlib.face_recognition_model_v1(face_recognition_models.face_recognition_model_location())
 
-        _dlib_models = (detector, sp, facerec)
-    return _dlib_models
+    return detector, sp, facerec
 
 def get_face_embeddings(image_np):
     detector, sp, facerec = load_dlib_models()
@@ -36,14 +29,15 @@ def get_face_embeddings(image_np):
         encodings.append(np.array(face_descriptor))
     return encodings
 
-def _build_trained_model():
+@st.cache_resource
+def get_trained_model():
     student_db = get_all_students()
     X = []
     y = []
 
     if not student_db:
         return None
-
+    
     for student in student_db:
         embedding = student.get('face_embedding')
         if embedding:
@@ -52,7 +46,7 @@ def _build_trained_model():
 
     if len(X) == 0:
         return 0
-
+    
     clf = SVC(kernel='linear', probability=True, class_weight='balanced')
 
     try:
@@ -60,16 +54,8 @@ def _build_trained_model():
     except ValueError:
         pass
     return  {'clf': clf, 'X': X, 'y': y}
-
-def get_trained_model():
-    if not _trained_model_cache["loaded"]:
-        _trained_model_cache["data"] = _build_trained_model()
-        _trained_model_cache["loaded"] = True
-    return _trained_model_cache["data"]
-
 def train_classifier():
-    _trained_model_cache["loaded"] = False
-    _trained_model_cache["data"] = None
+    st.cache_resource.clear()
     model_data = get_trained_model()
     return bool(model_data)
 
@@ -82,7 +68,7 @@ def predict_attendance(class_image_np):
 
     if not model_data:
         return detected_student, [], len(encodings)
-
+    
     clf = model_data['clf']
     X_train = model_data['X']
     y_train = model_data['y']
@@ -94,7 +80,7 @@ def predict_attendance(class_image_np):
             predicted_id = int(clf.predict([encoding])[0])
         else:
             predicted_id = int(all_students[0])
-
+        
         student_embedding = X_train[y_train.index(predicted_id)]
 
         best_match_score = np.linalg.norm(student_embedding - encoding)

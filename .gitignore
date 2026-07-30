@@ -6,7 +6,17 @@
 __pycache__/
 
 venv/
+.venv/
 
+# Secrets (Supabase credentials + JWT_SECRET live in .streamlit/secrets.toml)
 .streamlit/
 
 dist/
+
+# Generated/downloaded test media used by the verification scripts
+verification/assets/
+
+# Frontend build artifacts & deps (classsnap-frontend has its own .gitignore;
+# these are a safety net in case it's ever removed)
+node_modules/
+.next/

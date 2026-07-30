@@ -2,19 +2,13 @@ from resemblyzer import VoiceEncoder, preprocess_wav
 import numpy as np
 import io
 import librosa
-import logging
-
-logger = logging.getLogger(__name__)
-
-# Module-level cache replaces st.cache_resource. Warmed at FastAPI startup.
-_voice_encoder = None
+import streamlit as st
+import traceback
 
 
+@st.cache_resource
 def load_voice_encoder():
-    global _voice_encoder
-    if _voice_encoder is None:
-        _voice_encoder = VoiceEncoder()
-    return _voice_encoder
+    return VoiceEncoder()
 
 def get_voice_embedding(audio_bytes):
     try:
@@ -24,14 +18,14 @@ def get_voice_embedding(audio_bytes):
         wav = preprocess_wav(audio)
         embedding = encoder.embed_utterance(wav)
         return embedding.tolist()
-    except Exception:
-        logger.exception('Voice embedding failed')
+    except Exception as e:
+        st.error('Voive recog error')
         return None
-
+    
 def identify_speaker(new_embedding, candidate_dict, threshold = 0.65):
     if new_embedding is None or not candidate_dict:
         return None, 0.0
-
+    
     best_sid = None
     best_score = -1.0
 
@@ -44,7 +38,7 @@ def identify_speaker(new_embedding, candidate_dict, threshold = 0.65):
 
     if best_score >= threshold:
         return best_sid, best_score
-
+    
     return None, best_score
 
 def process_bulk_audio(audio_bytes, candidate_dict, threshold=0.65):
@@ -71,6 +65,6 @@ def process_bulk_audio(audio_bytes, candidate_dict, threshold=0.65):
                     identified_results[sid] = score
 
         return identified_results
-    except Exception:
-        logger.exception('Bulk audio processing failed')
+    except Exception as e:
+        st.error('Bulk process error')
         return {}

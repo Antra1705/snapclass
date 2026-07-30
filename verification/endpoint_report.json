@@ -1,0 +1,106 @@
+{
+  "face/recognize matches direct pipeline": {
+    "pass": true,
+    "detail": "endpoint={num_faces: 1, recognized: True, ids: [1], student: {'student_id': 1, 'name': 'Student1-Obama/Alice', 'has_face_embedding': True, 'has_voice_embedding': True} } direct={num_faces: 1, detected: {1: True}}"
+  },
+  "face/recognize rejects multi-face photo": {
+    "pass": true,
+    "detail": "num_faces=2 message='Multiple faces detected, please ensure only your face is visible'"
+  },
+  "students/login returns JWT for recognized face": {
+    "pass": true,
+    "detail": "status=200 student=1"
+  },
+  "students/login 401 for non-loginable photo": {
+    "pass": true,
+    "detail": "status=401 detail='Multiple faces detected, please ensure only your face is visible'"
+  },
+  "voice/verify matches direct identify_speaker": {
+    "pass": true,
+    "detail": "endpoint=(sid 1, score 0.9565296930478988) direct=(sid 1, score 0.9565296930478988)"
+  },
+  "voice/verify 401 without token": {
+    "pass": true,
+    "detail": "status=401"
+  },
+  "voice/verify 403 for student role": {
+    "pass": true,
+    "detail": "status=403"
+  },
+  "voice/verify 403 for unowned subject": {
+    "pass": true,
+    "detail": "status=403"
+  },
+  "analyze-face photo1 matches direct pipeline": {
+    "pass": true,
+    "detail": "endpoint detected_ids={'2': ['Photo 1'], '1': ['Photo 1']} direct={2: True, 1: True} results=[(1, 'Present', 'Photo 1'), (2, 'Present', 'Photo 1')]"
+  },
+  "analyze-face photo2 joins batch": {
+    "pass": true,
+    "detail": "photos_received=2 detected_ids={'2': ['Photo 2']} direct={2: True}"
+  },
+  "face-summary 409 when photos missing": {
+    "pass": true,
+    "detail": "status=409 detail=\"Batch incomplete: expected 3 photos but the server received 2 (['Photo 1', 'Photo 2']). Re-upload the missing photos with the same batch_id before summarizing.\""
+  },
+  "face-summary merges server-side": {
+    "pass": true,
+    "detail": "merged={'2': ['Photo 1', 'Photo 2'], '1': ['Photo 1']} expected={2: ['Photo 1', 'Photo 2'], 1: ['Photo 1']} results=[(1, 'Present', 'Photo 1'), (2, 'Present', 'Photo 1, Photo 2')]"
+  },
+  "face-summary 404 unknown batch": {
+    "pass": true,
+    "detail": "status=404"
+  },
+  "face-summary 403 foreign teacher": {
+    "pass": true,
+    "detail": "status=403"
+  },
+  "analyze-voice matches direct process_bulk_audio": {
+    "pass": true,
+    "detail": "endpoint={1: 0.9548203111212211, 2: 0.8639996049268954} direct={1: 0.9548203111212211, 2: 0.8639996049268954} results=[(1, 'Present'), (2, 'Present')]"
+  },
+  "analyze-voice 401 without token": {
+    "pass": true,
+    "detail": "status=401"
+  },
+  "mark saves for owned subject": {
+    "pass": true,
+    "detail": "status=200 saved=[{'student_id': 1, 'subject_id': 10, 'timestamp': '2026-07-30T22:00:00', 'is_present': True}]"
+  },
+  "mark 403 for unowned subject": {
+    "pass": true,
+    "detail": "status=403"
+  },
+  "mark 403 for student role": {
+    "pass": true,
+    "detail": "status=403"
+  },
+  "mark 400 for unenrolled student, nothing written": {
+    "pass": true,
+    "detail": "status=400 invalid_entries=[{'student_id': 3, 'subject_id': 10}] records_written=0"
+  },
+  "subject create returns server-generated 8-char code": {
+    "pass": true,
+    "detail": "code='B9YHWC6T'"
+  },
+  "client-supplied subject_code is ignored": {
+    "pass": true,
+    "detail": "code='84YG9P79'"
+  },
+  "enroll rate limited after 10 attempts/min": {
+    "pass": true,
+    "detail": "statuses=[404, 404, 404, 404, 404, 404, 404, 404, 404, 404, 429, 429]"
+  },
+  "teacher records: self 200 / other 403": {
+    "pass": true,
+    "detail": "self=200 other=403"
+  },
+  "student records: self 200 / other 403 / teacher 403": {
+    "pass": true,
+    "detail": "self=200 other=403 teacher=403"
+  },
+  "teacher records 401 without token": {
+    "pass": true,
+    "detail": "status=401"
+  }
+}

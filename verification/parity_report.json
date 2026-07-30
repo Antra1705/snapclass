@@ -1,0 +1,263 @@
+{
+  "face": {
+    "obama.jpg": {
+      "old": {
+        "num_faces": 1,
+        "detected": {
+          "1": true
+        },
+        "all_students": [
+          1,
+          2
+        ],
+        "scores": [
+          {
+            "predicted_id": 1,
+            "distance": 0.0,
+            "passes_0.4_threshold": true
+          }
+        ]
+      },
+      "new": {
+        "num_faces": 1,
+        "detected": {
+          "1": true
+        },
+        "all_students": [
+          1,
+          2
+        ],
+        "scores": [
+          {
+            "predicted_id": 1,
+            "distance": 0.0,
+            "passes_0.4_threshold": true
+          }
+        ]
+      },
+      "embeddings_bitwise_equal": true,
+      "outputs_match": true
+    },
+    "obama2.jpg": {
+      "old": {
+        "num_faces": 1,
+        "detected": {
+          "1": true
+        },
+        "all_students": [
+          1,
+          2
+        ],
+        "scores": [
+          {
+            "predicted_id": 1,
+            "distance": 0.37618618919090874,
+            "passes_0.4_threshold": true
+          }
+        ]
+      },
+      "new": {
+        "num_faces": 1,
+        "detected": {
+          "1": true
+        },
+        "all_students": [
+          1,
+          2
+        ],
+        "scores": [
+          {
+            "predicted_id": 1,
+            "distance": 0.37618618919090874,
+            "passes_0.4_threshold": true
+          }
+        ]
+      },
+      "embeddings_bitwise_equal": true,
+      "outputs_match": true
+    },
+    "biden.jpg": {
+      "old": {
+        "num_faces": 1,
+        "detected": {
+          "2": true
+        },
+        "all_students": [
+          1,
+          2
+        ],
+        "scores": [
+          {
+            "predicted_id": 2,
+            "distance": 0.0,
+            "passes_0.4_threshold": true
+          }
+        ]
+      },
+      "new": {
+        "num_faces": 1,
+        "detected": {
+          "2": true
+        },
+        "all_students": [
+          1,
+          2
+        ],
+        "scores": [
+          {
+            "predicted_id": 2,
+            "distance": 0.0,
+            "passes_0.4_threshold": true
+          }
+        ]
+      },
+      "embeddings_bitwise_equal": true,
+      "outputs_match": true
+    },
+    "two_people.jpg": {
+      "old": {
+        "num_faces": 2,
+        "detected": {
+          "2": true,
+          "1": true
+        },
+        "all_students": [
+          1,
+          2
+        ],
+        "scores": [
+          {
+            "predicted_id": 2,
+            "distance": 0.0572207949743738,
+            "passes_0.4_threshold": true
+          },
+          {
+            "predicted_id": 1,
+            "distance": 0.34107676074848103,
+            "passes_0.4_threshold": true
+          }
+        ]
+      },
+      "new": {
+        "num_faces": 2,
+        "detected": {
+          "2": true,
+          "1": true
+        },
+        "all_students": [
+          1,
+          2
+        ],
+        "scores": [
+          {
+            "predicted_id": 2,
+            "distance": 0.0572207949743738,
+            "passes_0.4_threshold": true
+          },
+          {
+            "predicted_id": 1,
+            "distance": 0.34107676074848103,
+            "passes_0.4_threshold": true
+          }
+        ]
+      },
+      "embeddings_bitwise_equal": true,
+      "outputs_match": true
+    }
+  },
+  "voice": {
+    "alice_probe.wav": {
+      "old": {
+        "identified_sid": 1,
+        "score": 0.9565296930478988
+      },
+      "new": {
+        "identified_sid": 1,
+        "score": 0.9565296930478988
+      },
+      "embeddings_equal": true,
+      "outputs_match": true
+    },
+    "bob_probe.wav": {
+      "old": {
+        "identified_sid": 2,
+        "score": 0.8964948736095588
+      },
+      "new": {
+        "identified_sid": 2,
+        "score": 0.8964948736095588
+      },
+      "embeddings_equal": true,
+      "outputs_match": true
+    },
+    "bulk.wav (alice + 1.2s silence + bob)": {
+      "old": {
+        "1": 0.9548203111212211,
+        "2": 0.8639996049268954
+      },
+      "new": {
+        "1": 0.9548203111212211,
+        "2": 0.8639996049268954
+      },
+      "outputs_match": true
+    }
+  },
+  "preprocessing": {
+    "obama2.jpg": {
+      "pil_mode": "RGB",
+      "arrays_bitwise_identical": true,
+      "old_pipeline_raw_output": {
+        "detected": {
+          "1": true
+        },
+        "num_faces": 1
+      },
+      "old_pipeline_convert_output": {
+        "detected": {
+          "1": true
+        },
+        "num_faces": 1
+      },
+      "outputs_identical": true
+    },
+    "two_people.jpg": {
+      "pil_mode": "RGB",
+      "arrays_bitwise_identical": true,
+      "old_pipeline_raw_output": {
+        "detected": {
+          "2": true,
+          "1": true
+        },
+        "num_faces": 2
+      },
+      "old_pipeline_convert_output": {
+        "detected": {
+          "2": true,
+          "1": true
+        },
+        "num_faces": 2
+      },
+      "outputs_identical": true
+    },
+    "obama2_rgba.png": {
+      "raw_array_shape": [
+        1200,
+        626,
+        4
+      ],
+      "old_pipeline_on_raw_rgba": {
+        "error": "RuntimeError: Unsupported image type, must be 8bit gray or RGB image."
+      },
+      "old_pipeline_on_converted_rgb": {
+        "detected": {
+          "1": true
+        },
+        "num_faces": 1
+      }
+    }
+  },
+  "determinism": {
+    "face_embeddings_repeatable": true,
+    "voice_embeddings_repeatable": true
+  }
+}

@@ -43,6 +43,14 @@ def create_subject(subject_code, name,section, teacher_id):
     response = supabase.table("subjects").insert(data).execute()
     return response.data
 
+def get_all_subjects():
+    response = supabase.table("subjects").select("subject_id, subject_code, name, section, teacher_id").execute()
+    return response.data
+
+def update_subject_code(subject_id, new_code):
+    response = supabase.table("subjects").update({"subject_code": new_code}).eq("subject_id", subject_id).execute()
+    return response.data
+
 def get_teacher_subjects(teacher_id):
     response = supabase.table("subjects").select("*, subject_students(count), attendance_logs(timestamp)").eq("teacher_id", teacher_id).execute()
     subjects = response.data

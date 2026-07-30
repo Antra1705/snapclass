@@ -1,5 +1,11 @@
 streamlit
 
+# API backend
+fastapi
+uvicorn[standard]
+python-multipart
+pyjwt
+
 # Utilties
 numpy 
 pandas
